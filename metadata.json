@@ -1,6 +1,0 @@
-{
-  "name": "VEXO Technical Athletic Apparel",
-  "description": "VEXO technical athletic sportswear and workout apparel studio featuring interactive lookbook, seasonal drop catalog, and modular gear systems.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
