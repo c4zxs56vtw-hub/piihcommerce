@@ -3,7 +3,7 @@ import { Search, Heart, ShoppingBag, Menu, X, ArrowUpRight, User, ShieldCheck } 
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../features/products';
 import { Product } from '../types';
-import { authService } from '../features/auth/services/authService';
+import { useAuth } from '../hooks/useAuth';
 
 interface HeaderProps {
   onNavigateCategory?: (category: string) => void;
@@ -22,9 +22,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigateCategory, onOpenAuth }
     setQuickViewProduct,
   } = useCart();
 
-  const isAuth = authService.isAuthenticated();
-  const isAdmin = authService.isAdmin();
-  const userName = authService.getUserName();
+  const { isAuthenticated: isAuth, isAdmin, userName } = useAuth();
 
   const { products } = useProducts();
   const [searchQuery, setSearchQuery] = useState('');

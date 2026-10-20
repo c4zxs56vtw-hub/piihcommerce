@@ -25,6 +25,9 @@ export const TopGearSection: React.FC = () => {
     outerwear:   'Classique',
   };
 
+  // Aucun produit : on n'affiche pas la section Favoris
+  if (!loading && trending.length === 0) return null;
+
   return (
     <section className="mx-auto w-full max-w-[1450px] px-4 py-16 sm:px-6 lg:px-8" id="trending">
       {/* En-tête */}
@@ -108,7 +111,7 @@ export const TopGearSection: React.FC = () => {
                   <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-black/60 backdrop-blur-sm px-2.5 py-1 rounded-full">
                     <Heart className="w-3 h-3 fill-red-400 text-red-400" />
                     <span className="text-[10px] font-mono text-white font-bold">
-                      {product.reviewsCount}
+                      {product.likesCount ?? 0}
                     </span>
                   </div>
                 </div>

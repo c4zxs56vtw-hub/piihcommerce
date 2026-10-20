@@ -27,8 +27,8 @@ export const SegmentedShowcase: React.FC = () => {
   const { products } = useProducts();
 
   const lycraProduct  = products[0];
-  const ninjaProduct  = products[5];
-  const anorakProduct = products[3];
+  const ninjaProduct  = products[1];
+  const anorakProduct = products[2];
 
   const [focused, setFocused] = useState<Card | null>(null);
 
@@ -140,7 +140,7 @@ export const SegmentedShowcase: React.FC = () => {
                       {card.label}
                     </span>
                     <AnimatePresence>
-                      {isFocused && (
+                      {isFocused && card.product && (
                         <motion.div
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}

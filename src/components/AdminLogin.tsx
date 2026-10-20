@@ -36,7 +36,12 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({
     setIsLoading(true);
 
     try {
-      await authService.login({ email, password });
+      const res = await authService.login({ email, password });
+      if (res.role !== 'ADMIN') {
+        authService.logout();
+        setErrorMessage("Ce compte n'a pas les droits administrateur.");
+        return;
+      }
       onLoginSuccess();
     } catch (err: unknown) {
       if (err instanceof Error) {

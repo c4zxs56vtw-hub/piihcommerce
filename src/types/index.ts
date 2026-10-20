@@ -36,8 +36,9 @@ export interface Product {
   description: string;
   specs: string[];
   inStock: boolean;
-  rating: number;
-  reviewsCount: number;
+  rating?: number;
+  reviewsCount?: number;
+  likesCount?: number;
   // Champs gérés par le backend
   createdAt?: string;
   updatedAt?: string;

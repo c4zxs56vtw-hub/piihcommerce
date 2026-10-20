@@ -18,12 +18,12 @@ import { ProductDetailModal } from './components/ProductDetailModal';
 import { LookbookStudioModal } from './components/LookbookStudioModal';
 import { CartDrawer } from './components/CartDrawer';
 import { WishlistDrawer } from './components/WishlistDrawer';
-import { VideoModal } from './components/VideoModal';
 import { ToastContainer } from './components/ToastContainer';
 import { AdminDashboard } from './components/AdminDashboard';
 import { AdminLogin } from './components/AdminLogin';
 import { AuthModal } from './components/AuthModal';
 import { authService } from './features/auth/services/authService';
+import { useAuth } from './hooks/useAuth';
 
 export default function App() {
   // Détecte si l'URL courante correspond à l'administration (#admin ou /admin)
@@ -37,16 +37,15 @@ export default function App() {
   // État de la modale Connexion / Inscription
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Vérifie si le token d'authentification est présent et valide
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return authService.isAuthenticated();
-  });
+  // État d'authentification réactif (connexion, déconnexion, expiration, 401)
+  const auth = useAuth();
+  // L'espace admin exige un compte ADMIN, pas seulement un jeton valide
+  const canAccessAdmin = auth.isAuthenticated && auth.isAdmin;
 
   // Écoute les changements d'ancre URL (#admin) et de navigation historique (popstate)
   useEffect(() => {
     const handleRouteSync = () => {
       setIsAdmin(checkIsAdminRoute());
-      setIsLoggedIn(authService.isAuthenticated());
     };
 
     window.addEventListener('hashchange', handleRouteSync);
@@ -55,16 +54,6 @@ export default function App() {
       window.removeEventListener('hashchange', handleRouteSync);
       window.removeEventListener('popstate', handleRouteSync);
     };
-  }, []);
-
-  // Écoute les déconnexions forcées (ex: token 401 expiré)
-  useEffect(() => {
-    const handleUnauthorized = () => {
-      setIsLoggedIn(false);
-    };
-
-    window.addEventListener('auth:unauthorized', handleUnauthorized);
-    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
   }, []);
 
   const handleOpenAdmin = () => {
@@ -83,14 +72,13 @@ export default function App() {
 
   const handleLogout = () => {
     authService.logout();
-    setIsLoggedIn(false);
     handleCloseAdmin();
   };
 
   return (
     <CartProvider>
       {isAdmin ? (
-        isLoggedIn ? (
+        canAccessAdmin ? (
           <AdminDashboard
             onLogout={handleLogout}
             onBackToStore={handleCloseAdmin}
@@ -98,7 +86,7 @@ export default function App() {
         ) : (
           <AdminLogin
             onLoginSuccess={() => {
-              setIsLoggedIn(true);
+              /* L'état se met à jour via useAuth */
             }}
             onCancel={handleCloseAdmin}
           />
@@ -127,14 +115,10 @@ export default function App() {
           <LookbookStudioModal />
           <CartDrawer />
           <WishlistDrawer />
-          <VideoModal />
           <ToastContainer />
           <AuthModal
             isOpen={isAuthModalOpen}
-            onClose={() => {
-              setIsAuthModalOpen(false);
-              setIsLoggedIn(authService.isAuthenticated());
-            }}
+            onClose={() => setIsAuthModalOpen(false)}
             onOpenAdmin={() => {
               setIsAuthModalOpen(false);
               handleOpenAdmin();

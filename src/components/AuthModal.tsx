@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
 } from 'lucide-react';
 import { authService } from '../features/auth/services/authService';
+import { useAuth } from '../hooks/useAuth';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -43,12 +44,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+  const {
+    isAuthenticated: isUserLoggedIn,
+    isAdmin,
+    userName,
+    userEmail,
+  } = useAuth();
 
-  const isUserLoggedIn = authService.isAuthenticated();
-  const isAdmin = authService.isAdmin();
-  const userName = authService.getUserName();
-  const userEmail = authService.getCurrentUserEmail();
+  if (!isOpen) return null;
 
   // Soumission Connexion
   const handleLoginSubmit = async (e: React.FormEvent) => {

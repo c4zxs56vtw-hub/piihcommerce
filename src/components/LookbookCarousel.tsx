@@ -8,7 +8,7 @@ export const LookbookCarousel: React.FC = () => {
   const { setSelectedLookForStudio } = useCart();
   const { looks } = useLooks();
 
-  const currentLook = looks[currentIdx];
+  const currentLook = looks[currentIdx] ?? looks[0];
 
   const handlePrev = () => {
     setCurrentIdx((prev) => (prev - 1 + looks.length) % looks.length);
@@ -17,6 +17,9 @@ export const LookbookCarousel: React.FC = () => {
   const handleNext = () => {
     setCurrentIdx((prev) => (prev + 1) % looks.length);
   };
+
+  // Aucun look publié : on n'affiche pas la section
+  if (!currentLook) return null;
 
   return (
     <section className="py-16 sm:py-20 px-4 md:px-8 max-w-[1440px] mx-auto overflow-hidden" id="lookbook">

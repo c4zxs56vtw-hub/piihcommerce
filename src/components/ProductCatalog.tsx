@@ -133,6 +133,14 @@ export const ProductCatalog: React.FC = () => {
         })}
       </div>
 
+      {filteredProducts.length === 0 && (
+        <p className="text-center text-sm font-mono text-black/50 py-16">
+          {products.length === 0
+            ? 'Les nouveaux articles arrivent bientôt.'
+            : 'Aucun article dans cette catégorie pour le moment.'}
+        </p>
+      )}
+
       {/* Center Call-To-Action Pill: SEE ALL BRANDS ↗ */}
       <div className="mt-14 flex justify-center">
         <a
