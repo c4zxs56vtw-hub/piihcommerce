@@ -3,8 +3,8 @@
 // Leave empty to use local fallback data.
 
 export const API_CONFIG = {
-  BASE_URL:   import.meta.env.VITE_API_URL ?? '',
-  TIMEOUT_MS: 8_000,
+  BASE_URL:   (import.meta.env.VITE_API_URL ?? '').replace(/\/+$/, ''),
+  TIMEOUT_MS: 25_000,
 } as const;
 
 export const ENDPOINTS = {

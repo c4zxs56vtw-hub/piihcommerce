@@ -61,6 +61,20 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     } catch {
       return text as unknown as T;
     }
+  } catch (err) {
+    if (err instanceof HttpError) {
+      throw err;
+    }
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      throw new HttpError(
+        408,
+        'Le serveur met trop de temps à répondre. Réessayez dans quelques secondes.'
+      );
+    }
+    throw new HttpError(
+      0,
+      `Impossible de joindre le serveur (${API_CONFIG.BASE_URL || 'API'}). Vérifiez que le backend est démarré.`
+    );
   } finally {
     clearTimeout(timeout);
   }
